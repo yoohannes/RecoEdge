@@ -15,7 +15,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.tensor import Tensor
+from torch import Tensor
 from fedrec.utilities import registry
 from torch.nn.parameter import Parameter
 
@@ -121,7 +121,8 @@ class PrEmbeddingBag(nn.Module):
                     high=np.sqrt(1 / num_embeddings),
                     size=(num_embeddings, embedding_dim)
                 ).astype(np.float32)
-                self.embs.weight = Parameter(torch.tensor(W, requires_grad=True))
+                self.embs.weight = Parameter(
+                    torch.tensor(W, requires_grad=True))
 
     def forward(self, input, offsets=None, per_sample_weights=None):
         return self.proj(self.embs(

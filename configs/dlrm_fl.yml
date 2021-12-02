@@ -34,18 +34,26 @@ model :
     dataset_config :
       name : "kaggle"
       dataset_multiprocessing : True
-
-
-communications:
-  gpu_map:
-    host1: [0, 2]
-    host2: [1, 0, 1]
-    host3: [1, 1, 0, 1]
-    host4: [0, 1, 0, 0, 0, 1, 0, 2]
   
-process_manager:
-  max_jobs_per_process: 10
-  comm_manager_config : []
+multiprocessing:
+  num_aggregators : 1
+  num_trainers : 1
+
+  process_manager : 
+    name : "ray"
+    
+
+  communications : 
+    name : "kafka"
+    consumer : True
+    producer : True
+    consumer_port : 9092
+    consumer_url : "127.0.0.1"
+    consumer_topic : 'testing1'
+    consumer_group_id : 'test-consumer-group'
+    producer_port : 9092
+    producer_url : "127.0.0.1"
+    producer_topic : 'testing1'
 
 train :
   name : dlrm
@@ -75,3 +83,9 @@ train :
     num_warmup_steps : 30000
     decay_start_step : 150000
     num_decay_steps : 150000
+
+aggregator:
+  name : "fed_avg"
+  data_seed : 100
+  init_seed : 100
+  model_seed : 100

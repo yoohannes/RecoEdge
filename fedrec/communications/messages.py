@@ -1,15 +1,6 @@
-from enum import Enum, auto
+from typing import Dict, List
 
-class ProcMessage(Enum):
-    SYNC_MODEL = 1
-    TRAIN_JOB = auto()
-    TEST_JOB = auto()
-
-class JobCompletions():
-    SENDER_ID = 1
-    STATUS = True
-    RESULTS = {}
-    ERRORS = ""
+from fedrec.python_executors.base_actor import ActorState
 
 
 class Message(object):
@@ -23,40 +14,38 @@ class Message(object):
     def get_receiver_id(self):
         return self.receiverid
 
+
 class JobSubmitMessage(Message):
-    def __init__(self, job_type, senderid, receiverid, workerState):
+    def __init__(self,
+                 job_type,
+                 job_args,
+                 job_kwargs,
+                 senderid,
+                 receiverid,
+                 workerState):
         super().__init__(senderid, receiverid)
-        self.job_type = job_type
-        self.workerstate = workerState
-        
+        self.job_type: str = job_type
+        self.job_args: List = job_args
+        self.job_kwargs: Dict = job_kwargs
+        self.workerstate: ActorState = workerState
+
     def get_worker_state(self):
         return self.workerstate
 
     def get_job_type(self):
         return self.job_type
 
+
 class JobResponseMessage(Message):
-    def __init__(self, senderid, receiverid):
-        super().__init__(senderid,receiverid)
-    
-    
-class ModelRequestMessage(Message):
-    def __init__(self, senderid, receiverid):
+    def __init__(self, job_type, senderid, receiverid):
         super().__init__(senderid, receiverid)
-    
-class ModelResponseMessage(Message):
-    def __init__(self, senderid, receiverid, modelweights, local_sample_num):
-        super().__init__(senderid, receiverid)        
-        self.modelweights = modelweights
-        self.local_sample_num = local_sample_num
+        self.job_type: str = job_type
+        self.results = {}
+        self.errors = None
 
-    def get_model_weights(self):
-        return self.modelweights
-    
-    def get_local_sample_num(self):
-        return self.local_sample_num
-
-    
-
-    
-    
+    @property
+    def status(self):
+        if self.errors is None:
+            return True
+        else:
+            return False
