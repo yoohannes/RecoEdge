@@ -2,17 +2,9 @@ from abc import ABC, abstractmethod
 from typing import Dict
 
 import attr
-from fedrec.python_executors.base_actor import (ActorConfig, ActorState,
-                                                BaseActor)
+from fedrec.python_executors.base_actor import ActorState, BaseActor
 from fedrec.utilities import registry
 from fedrec.utilities.logger import BaseLogger
-
-
-@attr.s
-class AggregatorConfig(ActorConfig):
-    """
-    AggregatorConfig is a class that holds the configuration for an aggregator.
-    """
 
 
 @attr.s
@@ -86,23 +78,23 @@ class Aggregator(BaseActor, ABC):
 
     def __init__(self,
                  worker_index: int,
-                 model_config: Dict,
-                 aggregator_config: AggregatorConfig,
+                 config: Dict,
                  logger: BaseLogger,
                  in_neighbours: Dict[int, Neighbour] = None,
                  out_neighbours: Dict[int, Neighbour] = None,
                  persistent_storage: str = None,
                  is_mobile: bool = True,
                  round_idx: int = 0):
-        super().__init__(worker_index, model_config, aggregator_config, logger,
+        super().__init__(worker_index, config, logger,
                          persistent_storage, is_mobile, round_idx)
         self.in_neighbours = in_neighbours
         self.out_neighbours = out_neighbours
-        #TODO update trainer logic to avoid double model initialization
-        self.worker = registry.construct('aggregator', model_config['aggregator'],
-                                        in_neighbours=in_neighbours, out_neighbours=out_neighbours)
-        self.worker_funcs = {func.__name__: func for func in dir(
-            self.worker) if callable(func)}
+        # TODO update trainer logic to avoid double model initialization
+        self.worker = registry.construct('aggregator', config['aggregator'],
+                                         in_neighbours=in_neighbours, out_neighbours=out_neighbours)
+        # self.worker_funcs = {func_name: getattr(self.worker, func_name) for func_name in dir(
+        #     self.worker) if callable(getattr(self.worker, func_name))}
+        self.worker_funcs = {"test_run": getattr(self.worker, "test_run")}
 
     def serialize(self):
         """Serialise the state of the worker to a AggregatorState.
@@ -150,7 +142,8 @@ class Aggregator(BaseActor, ABC):
         func_name : Name of the function to run in the aggregation
         """
         if func_name in self.worker_funcs:
-            self.worker_funcs[func_name](*args, **kwargs)
+            print(f"Running function name: {func_name}")
+            return self.worker_funcs[func_name](*args, **kwargs)
         else:
             raise ValueError(
                 f"Job type <{func_name}> not part of worker <{self.worker.__class__.__name__}> functions")
