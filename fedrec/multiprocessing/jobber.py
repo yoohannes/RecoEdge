@@ -38,7 +38,7 @@ class Jobber:
         try:
             while True:
                 print("Waiting for job request")
-                job_request: JobSubmitMessage = JobSubmitMessage(**self.comm_manager.receive_message())
+                job_request: JobSubmitMessage = self.comm_manager.receive_message()
                 print(f"Received job request {job_request}, {type(job_request)}")
 
                 result = self.execute(job_request)

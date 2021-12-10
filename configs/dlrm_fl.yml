@@ -44,6 +44,7 @@ multiprocessing:
     
   communications : 
     name : "kafka"
+    serializer : "json"
     consumer : True
     producer : True
     consumer_port : 9092
