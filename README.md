@@ -1,6 +1,10 @@
+
+![License](https://img.shields.io/github/license/NimbleEdge/RecoEdge?style=plastic)
+![Activity](https://img.shields.io/github/last-commit/NimbleEdge/RecoEdge?style=plastic)
+[![Chat on Discord](https://img.shields.io/discord/889803721339445288?color=purple&label=Discord&style=plastic)](https://nimbleedge.ai/discorc)
+
 # RecoEdge: Bringing Recommendations to the Edge
 A one stop solution to build your recommendation models, train them and, deploy them in a privacy preserving manner-- right on the users' devices. 
-We welcome you to the [Discord](https://discord.gg/TgAD7dgX7V) for queries related to the library and contribution in general.
 
 RecoEdge integrate the phenomenal works by [OpenMined](https://www.openmined.org/) and [FedML](https://github.com/FedML-AI/FedML) to easily explore new federated learning algorithms and deploy them into production.
 
@@ -189,3 +193,5 @@ model :
 2. Do your work.
 3. Push to your fork.
 4. Submit a PR to NimbleEdge/RecoEdge
+
+We welcome you to the [Discord](https://nimbleedge.ai/discord) for queries related to the library and contribution in general.
